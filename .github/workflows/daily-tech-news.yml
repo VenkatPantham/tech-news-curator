@@ -1,0 +1,56 @@
+name: Daily Tech News Curator
+
+on:
+  schedule:
+    # Run every day at 00:00 UTC
+    - cron: "0 0 * * *"
+  workflow_dispatch:
+
+jobs:
+  run-tech-news-curator:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout the repository
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Step 2: Set up Python
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.9"
+
+      # Step 3: Install dependencies
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      # Step 4: Set up environment variables and run the application
+      - name: Run Tech News Curator
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          REDDIT_CLIENT_ID: ${{ secrets.REDDIT_CLIENT_ID }}
+          REDDIT_CLIENT_SECRET: ${{ secrets.REDDIT_CLIENT_SECRET }}
+          REDDIT_USER_AGENT: "tech-news-curator"
+          SMTP_EMAIL: ${{ secrets.SMTP_EMAIL }}
+          SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+          EMAIL_RECIPIENTS: ${{ secrets.EMAIL_RECIPIENTS }}
+          ARTICLES_PER_SOURCE: 5
+          REDDIT_SUBREDDITS: programming,webdev,MachineLearning,artificial,Python
+          ARXIV_CATEGORIES: cs.AI,cs.LG,cs.CL,cs.CV
+          OUTPUT_DIRECTORY: output
+          SEND_EMAIL: true
+          LOG_LEVEL: INFO
+          LOG_FILE: tech_news_curator.log
+          LOG_DIR: logs
+        run: |
+          python src/main.py
+
+      # Step 5: Upload output (optional)
+      - name: Upload output
+        uses: actions/upload-artifact@v4
+        with:
+          name: tech-news-digest
+          path: output/

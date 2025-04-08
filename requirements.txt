@@ -1,0 +1,24 @@
+# Core dependencies
+requests>=2.31.0
+beautifulsoup4>=4.12.2
+openai>=1.3.0
+python-dotenv>=1.0.0
+
+# Reddit API wrapper
+praw>=7.7.1
+
+# Email support
+email-validator>=2.0.0
+
+# XML parsing (for arXiv)
+lxml>=4.9.3
+
+# Type checking
+mypy>=1.5.1
+types-requests>=2.31.0.1
+
+# Testing
+pytest>=7.4.0
+
+# Logging
+colorlog>=6.7.0
