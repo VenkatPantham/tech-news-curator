@@ -1,6 +1,6 @@
 # Tech News Curator
 
-A Python application that curates tech news from various sources, summarizes articles using OpenAI, and delivers them as markdown files or email digests.
+Tech News Curator is a tool for aggregating, scraping, and summarizing tech news articles from various sources. It leverages a local summarizer built with [Hugging Face Transformers](https://huggingface.co/transformers/) to provide concise article summaries without incurring API costs.
 
 ## Features
 
@@ -10,7 +10,7 @@ A Python application that curates tech news from various sources, summarizes art
   - GitHub Trending repositories
   - ArXiv research papers
   - Dev.to articles
-- **AI-powered summarization** using OpenAI's models
+- **Local Summarization:** Summarize articles using a local LLM (default model: `facebook/bart-large-cnn`).
 - **Flexible output options**:
   - Markdown files with clean formatting
   - Email digests with modern HTML styling
@@ -47,7 +47,13 @@ tech-news-curator/
 └── .env.example               # Example environment variables
 ```
 
-## Installation
+## Prerequisites
+
+- Python 3.8+
+- [Transformers](https://github.com/huggingface/transformers) library
+- [PyTorch](https://pytorch.org/) (or another appropriate backend)
+
+### Installation
 
 1. Clone the repository:
 
@@ -56,37 +62,17 @@ tech-news-curator/
    cd tech-news-curator
    ```
 
-2. Install the required dependencies:
+2. Create and activate a virtual environment (optional but recommended):
 
+   ```bash
+   python3 -m venv venv
+   source venv/bin/activate   # On macOS or Linux
    ```
+
+3. Install the required dependencies:
+
+   ```bash
    pip install -r requirements.txt
-   ```
-
-3. Set up your environment variables by creating a `.env` file based on `.env.example`:
-
-   ```
-   # API Keys
-   OPENAI_API_KEY=your-openai-api-key
-   REDDIT_CLIENT_ID=your-reddit-client-id
-   REDDIT_CLIENT_SECRET=your-reddit-client-secret
-
-   # Email Settings (optional)
-   SMTP_EMAIL=your-email@gmail.com
-   SMTP_PASSWORD=your-app-password
-   EMAIL_RECIPIENTS=recipient1@example.com,recipient2@example.com
-
-   # Content Settings
-   ARTICLES_PER_SOURCE=5
-   REDDIT_SUBREDDITS=programming,webdev,MachineLearning
-   ARXIV_CATEGORIES=cs.AI,cs.LG
-
-   # Output Settings
-   OUTPUT_DIRECTORY=output
-   SEND_EMAIL=true
-
-   # Logging
-   LOG_LEVEL=INFO
-   LOG_FILE=tech_news_curator.log
    ```
 
 ## Usage
@@ -103,7 +89,6 @@ python src/main.py
 
 The application is configured entirely through environment variables. Set these in your `.env` file or in your system environment:
 
-- `OPENAI_API_KEY`: Your OpenAI API key for summarization
 - `ARTICLES_PER_SOURCE`: Number of articles to fetch per source
 - `REDDIT_SUBREDDITS`: Comma-separated list of subreddits to scrape
 - `ARXIV_CATEGORIES`: Comma-separated list of arXiv categories
@@ -139,3 +124,4 @@ Modify the existing storage classes or create new ones in the `src/storage/` dir
 ## License
 
 This project is licensed under the MIT License.
+[MIT License](LICENSE)

@@ -26,12 +26,13 @@ class DevToScraper:
         }
         logger.info("Initialized Dev.to scraper")
         
-    def scrape(self, limit: int = 10) -> List[Dict[str, Any]]:
+    def scrape(self, limit: int = 10, fetch_content: bool = True) -> List[Dict[str, Any]]:
         """
         Scrape latest articles from Dev.to.
         
         Args:
             limit: Maximum number of articles to scrape
+            fetch_content: Whether to fetch full content for each article
             
         Returns:
             List of article dictionaries
@@ -121,7 +122,23 @@ class DevToScraper:
                     continue
             
             logger.info(f"Successfully scraped {len(articles)} articles from Dev.to")
-            return articles
+            
+            # Fetch full content for each article if requested
+            if fetch_content:
+                logger.info(f"Fetching content for {len(articles)} articles from Dev.to")
+                articles_with_content = []
+                for article in articles:
+                    try:
+                        article_with_content = self.parse_article(article)
+                        articles_with_content.append(article_with_content)
+                        # Add a small delay to avoid being blocked
+                        time.sleep(random.uniform(0.5, 1.5))
+                    except Exception as e:
+                        logger.error(f"Error fetching content for {article['title']}: {str(e)}")
+                        articles_with_content.append(article)  # Use original article without content
+                return articles_with_content
+            else:
+                return articles
             
         except Exception as e:
             logger.error(f"Error scraping Dev.to: {str(e)}")

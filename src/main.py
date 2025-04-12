@@ -49,7 +49,6 @@ class TechNewsConfiguration:
         self.smtp_email = os.getenv("SMTP_EMAIL")
         self.smtp_password = os.getenv("SMTP_PASSWORD")
         self.email_recipients = os.getenv("EMAIL_RECIPIENTS", "").split(",")
-        
         # Output configuration
         self.output_directory = os.getenv("OUTPUT_DIRECTORY", "output")
         self.should_send_email = os.getenv("SEND_EMAIL", "true").lower() in ("true", "yes", "1")
@@ -157,7 +156,7 @@ class TechNewsCurator:
         self.scrapers = get_all_scrapers(self.config.reddit_subreddits)
         
         # Initialize other components
-        self.summarizer = Summarizer(api_key=self.config.openai_api_key)
+        self.summarizer = Summarizer()
         
         self.markdown_storage = MarkdownStorage(output_dir=self.config.output_directory)
         self.email_digest = EmailDigest(
