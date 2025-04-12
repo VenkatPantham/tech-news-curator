@@ -8,7 +8,6 @@ Tech News Curator is a tool for aggregating, scraping, and summarizing tech news
   - Hacker News
   - Reddit (configurable subreddits)
   - GitHub Trending repositories
-  - ArXiv research papers
   - Dev.to articles
 - **Local Summarization:** Summarize articles using a local LLM (default model: `facebook/bart-large-cnn`).
 - **Flexible output options**:
@@ -27,7 +26,6 @@ tech-news-curator/
 │   │   ├── hacker_news_scraper.py
 │   │   ├── reddit_scraper.py
 │   │   ├── github_trending_scraper.py
-│   │   ├── arxiv_scraper.py
 │   │   ├── devto_scraper.py
 │   │   └── __init__.py
 │   ├── summarizer/            # Content summarization
@@ -91,7 +89,6 @@ The application is configured entirely through environment variables. Set these 
 
 - `ARTICLES_PER_SOURCE`: Number of articles to fetch per source
 - `REDDIT_SUBREDDITS`: Comma-separated list of subreddits to scrape
-- `ARXIV_CATEGORIES`: Comma-separated list of arXiv categories
 - `OUTPUT_DIRECTORY`: Directory to save markdown digests
 - `SEND_EMAIL`: Set to "true" to enable email sending
 - `SMTP_EMAIL`: Email address to send digests from

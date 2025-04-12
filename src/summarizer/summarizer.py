@@ -302,7 +302,7 @@ class Summarizer:
                     summary = f"This repository {summary}"
         
         # Paper/research formatting
-        elif any(s in source_lower for s in ['arxiv', 'paper', 'research']):
+        elif any(s in source_lower for s in ['paper', 'research']):
             if not any(summary.lower().startswith(prefix) for prefix in ['this paper', 'the paper', 'this study', 'the study']):
                 if summary[0].islower():
                     summary = f"This paper {summary}"

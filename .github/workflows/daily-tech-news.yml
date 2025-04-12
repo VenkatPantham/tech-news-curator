@@ -39,7 +39,6 @@ jobs:
           EMAIL_RECIPIENTS: ${{ secrets.EMAIL_RECIPIENTS }}
           ARTICLES_PER_SOURCE: 5
           REDDIT_SUBREDDITS: programming,webdev,MachineLearning,artificial,Python
-          ARXIV_CATEGORIES: cs.AI,cs.LG,cs.CL,cs.CV
           OUTPUT_DIRECTORY: output
           SEND_EMAIL: true
           LOG_LEVEL: INFO

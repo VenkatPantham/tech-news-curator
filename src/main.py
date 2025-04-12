@@ -42,7 +42,6 @@ class TechNewsConfiguration:
         # Scraping configuration
         self.articles_per_source = int(os.getenv("ARTICLES_PER_SOURCE", "5"))
         self.reddit_subreddits = os.getenv("REDDIT_SUBREDDITS", "programming,webdev,MachineLearning").split(",")
-        self.arxiv_categories = os.getenv("ARXIV_CATEGORIES", "cs.AI,cs.LG").split(",")
         
         # API keys and credentials
         self.openai_api_key = os.getenv("OPENAI_API_KEY")
@@ -227,12 +226,7 @@ class TechNewsCurator:
         
         for source_name, scraper in self.scrapers.items():
             try:
-                if source_name == "arXiv" and hasattr(scraper, "scrape") and callable(scraper.scrape):
-                    results[source_name] = scraper.scrape(
-                        category=self.config.arxiv_categories[0], 
-                        limit=limit
-                    )
-                elif hasattr(scraper, "scrape") and callable(scraper.scrape):
+                if hasattr(scraper, "scrape") and callable(scraper.scrape):
                     results[source_name] = scraper.scrape(limit=limit)
                 else:
                     logger.error(f"Scraper for {source_name} does not have a valid scrape method")
