@@ -111,8 +111,7 @@ class Summarizer:
             words = cleaned_text.split()
             input_length = len(words)
         
-        # Dynamic length parameters based on input word count
-        # For summarization, typically max_length should be smaller than input_length
+        # Calculate initial length parameters
         if input_length < 30:
             # For very short texts, just keep most of it
             max_length = max(10, min(input_length - 1, 25))
@@ -120,15 +119,23 @@ class Summarizer:
         elif input_length < 100:
             # For short texts, aim for 40-50% compression
             max_length = min(input_length * 3 // 5, 50)  # About 60% of input
-            min_length = max(20, max_length // 2)
+            min_length = max(10, max_length // 2)  # Reduced from 20 to 10
         elif input_length < 300:
             # For medium texts, aim for 60-70% compression
             max_length = min(input_length * 3 // 10, 90)  # About 30% of input
-            min_length = max(40, max_length // 2)
+            min_length = max(30, max_length // 2)  # Reduced from 40 to 30
         else:
             # For longer texts, cap the max length
             max_length = min(120, input_length // 4)  # Maximum length cap
-            min_length = max(60, max_length // 2)
+            min_length = max(40, max_length // 2)  # Reduced from 60 to 40
+
+        # Ensure min_length is ALWAYS less than max_length
+        if min_length >= max_length:
+            # If we have this issue, reduce min_length to be 1/2 of max_length
+            min_length = max(5, max_length // 2)
+            # Further ensure it's at least 2 less than max_length
+            if min_length >= max_length - 1:
+                min_length = max(3, max_length - 2)
 
         logger.debug(f"Summarizing text with input length {input_length} words. "
                      f"Using min_length={min_length} and max_length={max_length}.")
@@ -137,8 +144,8 @@ class Summarizer:
             # Ensure max_length is always less than input_length to avoid warnings
             if max_length >= input_length:
                 max_length = max(input_length - 1, 5)  # At least make it 1 less than input
-                min_length = max(3, max_length // 2)
-                logger.debug(f"Adjusted max_length to {max_length} to avoid warning")
+                min_length = max(3, max_length - 2)  # Ensure min_length is at least 2 less than max_length
+                logger.debug(f"Adjusted max_length to {max_length} and min_length to {min_length} to avoid warning")
                 
             summary = self.summarizer_pipeline(
                 cleaned_text,
@@ -187,8 +194,9 @@ class Summarizer:
         for i, chunk in enumerate(chunks):
             logger.debug(f"Summarizing chunk {i+1}/{len(chunks)}")
             # Use more aggressive summarization for chunks
-            max_length = min(100, len(chunk.split()) // 3)
-            min_length = max(50, max_length // 2)
+            chunk_words = len(chunk.split())
+            max_length = min(100, chunk_words // 3)
+            min_length = min(max_length - 2, max_length // 2)  # Ensure min_length < max_length
             
             try:
                 summary = self.summarizer_pipeline(
