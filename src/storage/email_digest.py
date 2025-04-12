@@ -81,7 +81,8 @@ class EmailDigest:
     
     def create_html_digest(self, summaries: List[Dict[str, Any]]) -> str:
         """
-        Create an HTML version of the news digest with modern styling.
+        Create an HTML version of the news digest with a complete modern UI revamp
+        that is compatible with major email clients and modes.
         
         Args:
             summaries: List of article summary dictionaries
@@ -91,219 +92,137 @@ class EmailDigest:
         """
         today = datetime.now().strftime("%B %d, %Y")
         
-        # Modern CSS styles for the email
-        styles = """
-        <style>
-            @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-            
-            :root {
-                --primary-color: #2563EB;
-                --primary-light: #DBEAFE;
-                --primary-dark: #1E40AF;
-                --text-dark: #111827;
-                --text-medium: #374151;
-                --text-light: #6B7280;
-                --bg-light: #F3F4F6;
-                --bg-white: #FFFFFF;
-                --success: #059669;
-                --success-light: #D1FAE5;
-                --accent: #7C3AED;
-                --accent-light: #EDE9FE;
-                --secondary: #EC4899;
-                --secondary-light: #FCE7F3;
-                --border-color: #E5E7EB;
-                --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-                --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-                --radius: 8px;
-            }
-            
-            * {
-                box-sizing: border-box;
-                margin: 0;
-                padding: 0;
-            }
-            
-            body {
-                font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-                line-height: 1.6;
-                color: var(--text-dark);
-                background-color: var(--bg-light);
-                margin: 0;
-                padding: 0;
-                -webkit-font-smoothing: antialiased;
-                -moz-osx-font-smoothing: grayscale;
-            }
-            
-            .container {
-                max-width: 600px;
-                margin: 0 auto;
-                padding: 20px;
-            }
-            
-            .header {
-                text-align: center;
-                padding: 30px 20px;
-                background: linear-gradient(135deg, var(--accent), var(--primary-color));
-                color: white;
-                border-radius: var(--radius) var(--radius) 0 0;
-            }
-            
-            .header h1 {
-                font-weight: 700;
-                font-size: 28px;
-                margin-bottom: 8px;
-                letter-spacing: -0.025em;
-            }
-            
-            .logo {
-                font-size: 32px;
-                margin-bottom: 10px;
-            }
-            
-            .date {
-                font-weight: 400;
-                opacity: 0.9;
-                font-size: 16px;
-            }
-            
-            .content {
-                background-color: var(--bg-white);
-                border-radius: 0 0 var(--radius) var(--radius);
-                box-shadow: var(--shadow-sm);
-                padding: 30px 20px;
-                margin-bottom: 20px;
-            }
-            
-            .intro {
-                margin-bottom: 30px;
-                padding-bottom: 20px;
-                border-bottom: 1px solid var(--border-color);
-            }
-            
-            .article {
-                background-color: var(--bg-white);
-                border-radius: var(--radius);
-                box-shadow: var(--shadow-sm);
-                padding: 25px;
-                margin-bottom: 20px;
-                border: 1px solid var(--border-color);
-                transition: transform 0.2s ease-in-out;
-            }
-            
-            .article:hover {
-                transform: translateY(-2px);
-                box-shadow: var(--shadow);
-            }
-            
-            .article-title {
-                color: var(--primary-color);
-                font-size: 20px;
-                font-weight: 600;
-                margin-bottom: 12px;
-                line-height: 1.4;
-            }
-            
-            .meta {
-                display: flex;
-                align-items: center;
-                margin-bottom: 16px;
-            }
-            
-            .source-tag {
-                display: inline-block;
-                background-color: var(--secondary-light);
-                color: var(--secondary);
-                padding: 4px 10px;
-                border-radius: 20px;
-                font-size: 12px;
-                font-weight: 500;
-            }
-            
-            .summary {
-                color: var(--text-medium);
-                margin-bottom: 20px;
-                font-size: 15px;
-                line-height: 1.7;
-            }
-            
-            .article-link {
-                display: inline-block;
-                background-color: var(--accent);
-                color: white;
-                padding: 8px 16px;
-                text-decoration: none;
-                border-radius: 6px;
-                font-weight: 500;
-                font-size: 14px;
-                transition: background-color 0.2s;
-            }
-            
-            .article-link:hover {
-                background-color: var(--primary-dark);
-            }
-            
-            .footer {
-                text-align: center;
-                padding: 30px 20px;
-                color: var(--text-light);
-                font-size: 14px;
-                border-top: 1px solid var(--border-color);
-            }
-            
-            .social-links {
-                margin: 20px 0;
-            }
-            
-            .social-link {
-                display: inline-block;
-                margin: 0 8px;
-                color: var(--accent);
-                text-decoration: none;
-            }
-            
-            /* Mobile responsiveness */
-            @media only screen and (max-width: 600px) {
-                .container {
-                    width: 100%;
-                    padding: 10px;
-                }
-                
-                .header, .content, .footer {
-                    padding: 20px 15px;
-                }
-                
-                .article {
-                    padding: 20px;
-                }
-            }
-        </style>
-        """
-        
-        # HTML Email structure
-        html = f"""
-        <!DOCTYPE html>
+        html = f"""<!DOCTYPE html>
         <html lang="en">
         <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Tech News Digest</title>
-            {styles}
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="color-scheme" content="light dark">
+        <title>Tech News Digest</title>
+        <style type="text/css">
+            /* General reset */
+            body {{
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            font-family: Arial, sans-serif;
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+            }}
+            table {{
+            border-collapse: collapse;
+            }}
+            /* Container table for center alignment and max-width */
+            .container {{
+            max-width: 600px;
+            width: 100%;
+            background-color: #ffffff;
+            border: 1px solid #dddddd;
+            }}
+            /* Header styling */
+            .header {{
+            background-color: #0A66C2;
+            text-align: center;
+            padding: 20px;
+            color: #ffffff;
+            }}
+            .header h1 {{
+            margin: 0;
+            font-size: 24px;
+            font-weight: bold;
+            }}
+            .date {{
+            font-size: 14px;
+            opacity: 0.9;
+            }}
+            /* Content section */
+            .content {{
+            padding: 20px;
+            color: #333333;
+            font-size: 16px;
+            line-height: 1.5;
+            }}
+            /* Article block */
+            .article {{
+            border-bottom: 1px solid #dddddd;
+            padding: 15px 0;
+            }}
+            .article:last-child {{
+            border-bottom: none;
+            }}
+            .article-title {{
+            font-size: 18px;
+            color: #0A66C2;
+            margin-bottom: 10px;
+            font-weight: bold;
+            }}
+            .meta {{
+            margin-bottom: 10px;
+            }}
+            .source-tag {{
+            background-color: #E62117;
+            color: #ffffff;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            }}
+            .summary {{
+            font-size: 14px;
+            color: #555555;
+            margin: 10px 0;
+            }}
+            /* Button styling (unchanged as per your note) */
+            .article-link {{
+            display: inline-block;
+            background-color: #7C3AED;
+            color: #ffffff;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-size: 14px;
+            border: 1px solid #7C3AED;
+            /* Inline !important added if needed in an email client's inline style */
+            }}
+            .article-link:hover {{
+            background-color: #5B21B6;
+            border-color: #5B21B6;
+            }}
+            /* Footer styling */
+            .footer {{
+            text-align: center;
+            font-size: 12px;
+            color: #777777;
+            padding: 20px;
+            border-top: 1px solid #dddddd;
+            }}
+            .social-links a {{
+            color: #0A66C2;
+            text-decoration: none;
+            margin: 0 5px;
+            font-size: 14px;
+            }}
+        </style>
         </head>
         <body>
-            <div class="container">
-                <div class="header">
-                    <div class="logo">📱</div>
-                    <h1>Tech News Digest</h1>
-                    <div class="date">{today}</div>
-                </div>
-                
-                <div class="content">
-                    <div class="intro">
-                        <p>Here's your curated digest of today's most important tech stories. Stay informed with the latest developments in the tech world.</p>
-                    </div>
+        <table width="100%" bgcolor="#f4f4f4" style="padding: 20px 0;">
+            <tr>
+            <td align="center">
+                <table class="container" cellpadding="0" cellspacing="0">
+                <!-- Header -->
+                <tr>
+                    <td class="header" style="background-color: #0A66C2; text-align: center; padding: 20px; color: #ffffff;">
+                    <div style="font-size: 32px; margin-bottom: 10px;">📱</div>
+                    <h1 style="margin: 0; font-size: 24px; font-weight: bold;">Tech News Digest</h1>
+                    <div class="date" style="font-size: 14px; opacity: 0.9;">{today}</div>
+                    </td>
+                </tr>
+                <!-- Content -->
+                <tr>
+                    <td class="content" style="padding: 20px; color: #333333; font-size: 16px; line-height: 1.5;">
+                    <p style="margin: 0 0 20px 0;">Here is your curated digest of today's most important tech stories. Stay informed with the latest news.</p>
         """
         
-        # Add each article
+        # Generate each article block
         article_count = len(summaries)
         for i, summary in enumerate(summaries):
             title = summary.get('title', 'No Title')
@@ -312,44 +231,49 @@ class EmailDigest:
             summary_text = summary.get('summary', '')
             
             html += f"""
-                    <div class="article">
-                        <h2 class="article-title">{title}</h2>
-                        <div class="meta">
-                            <span class="source-tag">{source}</span>
+                    <div class="article" style="border-bottom: 1px solid #dddddd; padding: 15px 0;">
+                        <div class="article-title" style="font-size: 18px; color: #0A66C2; margin-bottom: 10px; font-weight: bold;">{title}</div>
+                        <div class="meta" style="margin-bottom: 10px;">
+                        <span class="source-tag" style="background-color: #E62117; color: #ffffff; padding: 3px 8px; border-radius: 4px; font-size: 12px;">{source}</span>
                         </div>
-                        <div class="summary">{summary_text}</div>
-                        <a href="{link}" class="article-link">Read Full Article</a>
+                        <div class="summary" style="font-size: 14px; color: #555555; margin: 10px 0;">{summary_text}</div>
+                        <a href="{link}" class="article-link" style="display: inline-block; background-color: #7C3AED; color: #ffffff; text-decoration: none; padding: 10px 20px; border-radius: 4px; font-size: 14px; border: 1px solid #7C3AED;">Read Full Article</a>
                     </div>
             """
             
-            # Add a "more stories" separator if not the last article
+            # Optionally insert a separator block if there are many articles (example after 3 items)
             if i == 2 and article_count > 5:
-                html += f"""
-                    <div style="text-align: center; margin: 30px 0; color: var(--text-medium);">
-                        <p style="font-weight: 500;">More trending stories</p>
-                        <div style="border-top: 1px solid var(--border-color); margin-top: 10px;"></div>
+                html += """
+                    <div style="text-align: center; margin: 30px 0; color: #555555; font-size: 14px;">
+                        <strong>More trending stories</strong>
+                        <div style="border-top: 1px solid #dddddd; margin-top: 10px;"></div>
                     </div>
                 """
         
-        # Footer
+        # Footer section
         html += f"""
-                </div>
-                
-                <div class="footer">
-                    <p>Thanks for reading the Tech News Digest for {today}</p>
-                    <div class="social-links">
-                        <a href="https://github.com/VenkatPantham" class="social-link">GitHub</a> &bull;
-                        <a href="https://www.linkedin.com/in/venkat-pantham/" class="social-link">LinkedIn</a> &bull;
-                        <a href="https://venkatpantham.github.io/" class="social-link">Website</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="footer" style="text-align: center; font-size: 12px; color: #777777; padding: 20px; border-top: 1px solid #dddddd;">
+                    <p style="margin: 0 0 10px 0;">Thanks for reading the Tech News Digest for {today}</p>
+                    <div class="social-links" style="font-size: 14px;">
+                        <a href="https://github.com/VenkatPantham" style="color: #0A66C2; text-decoration: none; margin: 0 5px;">GitHub</a>&bull;
+                        <a href="https://www.linkedin.com/in/venkat-pantham/" style="color: #0A66C2; text-decoration: none; margin: 0 5px;">LinkedIn</a>&bull;
+                        <a href="https://venkatpantham.github.io/" style="color: #0A66C2; text-decoration: none; margin: 0 5px;">Website</a>
                     </div>
-                </div>
-            </div>
+                    </td>
+                </tr>
+                </table>
+            </td>
+            </tr>
+        </table>
         </body>
         </html>
         """
         
         return html
-        
+    
     def send_digest(self, recipients: List[str], summaries: List[Dict[str, Any]]) -> bool:
         """
         Create and send an email digest to the specified recipients.
