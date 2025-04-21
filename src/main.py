@@ -17,6 +17,9 @@ from dotenv import load_dotenv
 # Local imports - utilities
 from utils.logger import configure_logging
 
+# Initialize module-level logger
+logger = logging.getLogger(__name__)
+
 # Local imports - scrapers
 from scraper import get_all_scrapers
 
