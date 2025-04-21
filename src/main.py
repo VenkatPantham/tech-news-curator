@@ -47,7 +47,6 @@ class TechNewsConfiguration:
         self.reddit_subreddits = os.getenv("REDDIT_SUBREDDITS", "programming,webdev,MachineLearning").split(",")
         
         # API keys and credentials
-        self.openai_api_key = os.getenv("OPENAI_API_KEY")
         self.smtp_email = os.getenv("SMTP_EMAIL")
         self.smtp_password = os.getenv("SMTP_PASSWORD")
         self.email_recipients = os.getenv("EMAIL_RECIPIENTS", "").split(",")
@@ -76,9 +75,6 @@ class TechNewsConfiguration:
             
     def _validate_config(self) -> None:
         """Validate configuration settings and log warnings for missing values."""
-        if not self.openai_api_key:
-            logger.warning("OpenAI API key not found! Summarization will not work.")
-            
         if self.should_send_email:
             if not self.smtp_email or not self.smtp_password:
                 logger.warning("Email sending is enabled but SMTP credentials are missing")
